@@ -1,0 +1,207 @@
+***************
+
+mongo
+
+*********Creation du base du donnee contact
+
+use contact
+
+=>
+
+switched to db contact
+
+***************Create  collection du bd contactlist
+
+db.createCollection("contactlist")
+=>
+
+{ "ok" : 1 }
+
+****************Creation collection contactlist
+
+db.contactlist.insertMany([{Lastname:"Ben Lahmer",Firstname:"Fares",Email:"fares@gmail.com",age:26},
+{Lastname:"Kefi",Firstname:"Seif",Email:"kefi@gmail.com",age:15},
+{Lastname:"Fatnassi",Firstname:"Sarra",Email:"sarra.f@gmail.com",age:40},
+{Lastname:"Ben Yahia",Firstname:"Rym",age:4},
+{Lastname:"Cherif",Firstname:"Sami",age:3}])
+
+=>{
+        "acknowledged" : true,
+        "insertedIds" : [
+                ObjectId("61c3762c810563428f55417c"),
+                ObjectId("61c3762c810563428f55417d"),
+                ObjectId("61c3762c810563428f55417e"),
+                ObjectId("61c3762c810563428f55417f"),
+                ObjectId("61c3762c810563428f554180")
+        ]
+}
+
+******************* affichage des informations
+
+> db.contactlist.find().pretty()
+{
+        "_id" : ObjectId("61c3762c810563428f55417c"),
+        "Lastname" : "Ben Lahmer",
+        "Firstname" : "Fares",
+        "Email" : "fares@gmail.com",
+        "age" : 26
+}
+{
+        "_id" : ObjectId("61c3762c810563428f55417d"),
+        "Lastname" : "Kefi",
+        "Firstname" : "Seif",
+        "Email" : "kefi@gmail.com",
+        "age" : 15
+}
+{
+        "_id" : ObjectId("61c3762c810563428f55417e"),
+        "Lastname" : "Fatnassi",
+        "Firstname" : "Sarra",
+        "Email" : "sarra.f@gmail.com",
+        "age" : 40
+}
+{
+        "_id" : ObjectId("61c3762c810563428f55417f"),
+        "Lastname" : "Ben Yahia",
+        "Firstname" : "Rym",
+        "age" : 4
+}
+{
+        "_id" : ObjectId("61c3762c810563428f554180"),
+        "Lastname" : "Cherif",
+        "Firstname" : "Sami",
+        "age" : 3
+}
+
+
+************Display all the information about only one person using his ID
+
+db.contactlist.find({_id:ObjectId("61c3762c810563428f55417c")}).pretty()
+
+=>
+
+{
+        "_id" : ObjectId("61c3762c810563428f55417c"),
+        "Lastname" : "Ben Lahmer",
+        "Firstname" : "Fares",
+        "Email" : "fares@gmail.com",
+        "age" : 26
+}
+
+**************Display all the contacts with an age >18
+
+db.contactlist.find({age:{$gt:18}}).pretty()
+
+=>
+
+{
+        "_id" : ObjectId("61c3762c810563428f55417c"),
+        "Lastname" : "Ben Lahmer",
+        "Firstname" : "Fares",
+        "Email" : "fares@gmail.com",
+        "age" : 26
+}
+{
+        "_id" : ObjectId("61c3762c810563428f55417e"),
+        "Lastname" : "Fatnassi",
+        "Firstname" : "Sarra",
+        "Email" : "sarra.f@gmail.com",
+        "age" : 40
+}
+
+**************Display all the contacts with an age>18 and name containing "ah"
+
+db.contactlist.find({$and:[{Lastname:{$regex:"ah"}},{age:{$gt:18}}]}).pretty()
+
+=>
+
+        "_id" : ObjectId("61c3762c810563428f55417c"),
+        "Lastname" : "Ben Lahmer",
+        "Firstname" : "Fares",
+        "Email" : "fares@gmail.com",
+        "age" : 26
+		
+************************Change the contact's first name from"Kefi Seif" to "Kefi Anis".
+
+db.contactlist.updateOne({Lastname:"Kefi"},{$set:{Firstname:"Anis"}})
+
+=>
+
+{ "acknowledged" : true, "matchedCount" : 1, "modifiedCount" : 1 }
+
+*****************Affichage
+
+db.contactlist.find().pretty()		
+
+=>
+
+{
+        "_id" : ObjectId("61c3762c810563428f55417c"),
+        "Lastname" : "Ben Lahmer",
+        "Firstname" : "Fares",
+        "Email" : "fares@gmail.com",
+        "age" : 26
+}
+{
+        "_id" : ObjectId("61c3762c810563428f55417d"),
+        "Lastname" : "Kefi",
+        "Firstname" : "Anis",
+        "Email" : "kefi@gmail.com",
+        "age" : 15
+}
+{
+        "_id" : ObjectId("61c3762c810563428f55417e"),
+        "Lastname" : "Fatnassi",
+        "Firstname" : "Sarra",
+        "Email" : "sarra.f@gmail.com",
+        "age" : 40
+}
+{
+        "_id" : ObjectId("61c3762c810563428f55417f"),
+        "Lastname" : "Ben Yahia",
+        "Firstname" : "Rym",
+        "age" : 4
+}
+{
+        "_id" : ObjectId("61c3762c810563428f554180"),
+        "Lastname" : "Cherif",
+        "Firstname" : "Sami",
+        "age" : 3
+}
+
+********************Delete the contacts that are aged under <5
+
+db.contactlist.deleteMany({age:{$lt:5}})
+
+=>
+
+{ "acknowledged" : true, "deletedCount" : 2 }
+
+
+*******************Affichage
+
+db.contactlist.find().pretty()
+
+=>
+
+{
+        "_id" : ObjectId("61c3762c810563428f55417c"),
+        "Lastname" : "Ben Lahmer",
+        "Firstname" : "Fares",
+        "Email" : "fares@gmail.com",
+        "age" : 26
+}
+{
+        "_id" : ObjectId("61c3762c810563428f55417d"),
+        "Lastname" : "Kefi",
+        "Firstname" : "Anis",
+        "Email" : "kefi@gmail.com",
+        "age" : 15
+}
+{
+        "_id" : ObjectId("61c3762c810563428f55417e"),
+        "Lastname" : "Fatnassi",
+        "Firstname" : "Sarra",
+        "Email" : "sarra.f@gmail.com",
+        "age" : 40
+}
